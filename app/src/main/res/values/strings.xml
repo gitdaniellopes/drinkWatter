@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">drinkWater</string>
+    <string name="hint">Intervalo (min)</string>
+    <string name="notify">Notificar</string>
+    <string name="validation">Intervalo deve ser definido</string>
+    <string name="pause">Pausar</string>
+</resources>
