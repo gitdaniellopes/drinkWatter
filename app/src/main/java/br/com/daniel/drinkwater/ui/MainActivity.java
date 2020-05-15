@@ -1,8 +1,12 @@
-package br.com.daniel.drinkwater;
+package br.com.daniel.drinkwater.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +15,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import br.com.daniel.drinkwater.R;
+import br.com.daniel.drinkwater.notification.NotificationPublisher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     getPikerEEdit();
                     setLayoutButtonNoActivated();
                     save(storage);
+                    notification();
                     activated = true;
 
                 } else {
@@ -63,6 +71,22 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void notification() {
+        Intent notificationIntent = new Intent(MainActivity.this,
+                NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.KEY_NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.KEY_NOTIFICATION, "hora de beber agua");
+
+        final PendingIntent broadcast = PendingIntent.getBroadcast(MainActivity.this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + (interval * 1000);
+        final AlarmManager alarmManager
+                = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, broadcast);
     }
 
     private void setLayoutButtonIsActivated() {
